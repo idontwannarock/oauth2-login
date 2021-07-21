@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+<script>
+    function init() {
+        let urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('code') !== undefined && urlParams.get('state') !== undefined) {
+            const code = urlParams.get('code');
+            const state = urlParams.get('state');
+            window.opener.postMessage({msg: 'redirect', code: code, loginType: state}, location.origin);
+        } else {
+            window.close();
+        }
+    }
+
+    init();
+</script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <script type="text/javascript">
+        const facebookAppId = "xxx";
+        const redirectUrl = "http://localhost:8888/callback.html";
+
+        function popupLogin(url, windowName, width, height) {
+            const LeftPosition = (screen.width) ? (screen.width - width) / 2 : 0;
+            const TopPosition = (screen.height) ? (screen.height - height) / 2 : 0;
+            const settings = 'height=' + height + ',width=' + width + ',top=' + TopPosition + ',left=' + LeftPosition +
+                ',location=yes,resizable=yes,scrollbars=yes,status=yes'
+            const popupWindow = window.open(url, windowName, settings);
+
+            window.addEventListener('message', function receiveData(data) {
+                const loginType = data.data.loginType;
+                const code = data.data.code;
+                document.getElementById("loginType").innerHTML = 'Login Type: ' + loginType;
+                document.getElementById("code").innerHTML = 'Code: ' + code;
+                popupWindow.close();
+
+                // TODO: 此處即可繼續進行串接後端 api，將 authorization code 提供給後端繼續 OAuth 2.0 Authorization Code Flow 的後續流程
+            }, false);
+        }
+
+        function facebookLoginPopup() {
+            const url = "https://www.facebook.com/v11.0/dialog/oauth?client_id=" + facebookAppId + "&redirect_uri=" + redirectUrl + "&state=facebook";
+            const windowName = "_blank";
+            const width = 600;
+            const height = 600;
+            popupLogin(url, windowName, width, height);
+        }
+    </script>
+</head>
+<body>
+<button onclick="facebookLoginPopup()">Facebook Login</button>
+<p id="loginType"></p>
+<p id="code"></p>
+</body>
+</html>
